@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Colorful balls</title>
+  <style>
+    body {
+      margin-left: 150px;
+      margin-top: 7px;
+    }
+
+    #canvas {
+      box-shadow: 0 0 10px #000;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas">当前浏览器不支持canvas</canvas>
+
+  <script src="./js/underscore.js"></script>
+  <script>
+    //1.获取画布
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 500;
+    canvas.height = 500;
+    canvas.style.backgroundColor = '#000';
+
+    //2.创建类
+    class Ball {
+      // 构造器
+      constructor(posX, posY, color) {
+        this.x = posX;
+        this.y = posY;
+        this.color = color;
+        this.r = 40; //半径
+      }
+      // 绘制
+      render() {
+        ctx.save();
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    //3.移动的小球类
+    class MoveBall extends Ball {
+      constructor(posX, posY, color) {
+        super(posX, posY, color); //调用父类属性
+
+        //量的变化
+        this.dX = _.random(-5, 5); //dX:deltaX,x的增量;_.random():underscore提供的方法,生成一个随机数,和Math.random()类似
+        this.dY = _.random(-5, 5);
+        this.dR = _.random(1, 3);
+      }
+
+      upDate() {
+        this.x += this.dX;
+        this.y += this.dY;
+        this.r -= this.dR;
+        if (this.r < 0) {
+          this.r = 0;
+        }
+      }
+    }
+
+    //4.实例化
+    let ballArr = [];
+    let colorArr = ['red', 'green', 'yellow', 'purple', 'blue', 'pink', 'orange'];
+
+    //5.监听鼠标移动
+    canvas.addEventListener('mousemove', function (e) {
+      ballArr.push(new MoveBall(e.offsetX, e.offsetY, colorArr[_.random(0, colorArr.length - 1)]));
+      console.log(ballArr);
+    });
+
+    //6.开启定时器
+    setInterval(function () {
+      //清屏
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //绘制
+      for (let i = 0; i < ballArr.length; i++) {
+        ballArr[i].render();
+        ballArr[i].upDate();
+        if (ballArr[i].r === 0) {
+          ballArr.splice(i, 1);
+        }
+      }
+    },50);
+  </script>
+</body>
+
+</html>
