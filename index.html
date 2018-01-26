@@ -88,7 +88,7 @@
       //绘制
       for (let i = 0; i < ballArr.length; i++) {
         ballArr[i].render();
-        ballArr[i].upDate();
+        ballArr[i].upDate();  //更新
         if (ballArr[i].r === 0) {
           ballArr.splice(i, 1);
         }
