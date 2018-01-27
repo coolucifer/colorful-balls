@@ -87,7 +87,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       //绘制
       for (let i = 0; i < ballArr.length; i++) {
-        ballArr[i].render();
+        ballArr[i].render();  //渲染
         ballArr[i].upDate();  //更新
         if (ballArr[i].r === 0) {
           ballArr.splice(i, 1);
